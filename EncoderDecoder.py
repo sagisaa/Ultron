@@ -45,7 +45,8 @@ def decodeMessage(buffer):
         msg.Init(hash, origin_length)
 
     else:
-        raise Exception("Invalid type")
+        print buffer
+        raise Exception("Invalid type: " + str(encodedM[0]) + str(encodedM[1]))
 
     return msg
 

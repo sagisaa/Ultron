@@ -3,8 +3,9 @@ import socket
 import EncoderDecoder
 from Messages.Offer import *
 
-SERVER_IP = "127.0.0.1"
-SERVER_LISTENING_PORT = 3117
+addr = ('localhost', 10000)
+# SERVER_IP = "127.0.0.1"
+# SERVER_LISTENING_PORT = 3117
 BUFFER_SIZE = 586
 
 
@@ -25,12 +26,12 @@ class Server:
     def send_offer(self, client_address):
         msg = Offer()
         msg.Init()
-        print "offer"
+        print "Offering!"
         self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
 
     def start(self):
 
-        self.server_socket.bind((SERVER_IP, self.server_port))
+        self.server_socket.bind(addr)
 
         while True:
             # before doing the functionality below, move on the list and remove any thread that has finished

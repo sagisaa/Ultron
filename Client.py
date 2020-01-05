@@ -4,8 +4,9 @@ from Messages.Imports import *
 import EncoderDecoder
 from Future import *
 
-server_port = 80
-IP_broadcast = "80.230.140.109" #"255.255.255.255"
+addr = ('localhost', 10000)
+# server_port = 80
+# IP_broadcast = "80.230.140.109" #"255.255.255.255"
 BUFFER_SIZE = 586
 
 
@@ -42,7 +43,8 @@ class Client:
 
     def discover(self):
         discover_message = Discover()
-        self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), (IP_broadcast, server_port))
+        discover_message.Init()
+        self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), addr)
         time_out = threading.Timer(10.0, self.stop_listening)
         time_out.start()
 
@@ -51,6 +53,7 @@ class Client:
             msg = EncoderDecoder.decodeMessage(data)
             if msg.type == 2:
                 self.add_server(address)
+                print "Received an offer!"
 
     def num_to_word(self, num, len):
         letters = "abcdefghijklmnopqrstuvwxyz"
