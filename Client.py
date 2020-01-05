@@ -58,8 +58,13 @@ class Client:
             pairs.append((self.num_to_word(int(i * rng), msg_length), self.num_to_word(int((i + 1) * rng) - 1, msg_length)))
         return pairs
 
-    def send_to_servers(self, ):
-        return -1
+    def send_to_servers(self, msg_length):
+        hash_range = self.divide_range(msg_length)
+        for server in self.connected_servers:
+            ###ToDo - this
+            print "not implemented"
+
+
 
     def communicate(self, hash, length):
         self.discover()
