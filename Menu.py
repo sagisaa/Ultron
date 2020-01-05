@@ -4,8 +4,6 @@ import EncoderDecoder
 
 def main():
 
-    print divide_range(8)
-
 
     numOfServers = 1
     if len(sys.argv) != 2:
@@ -18,7 +16,7 @@ def main():
     msg.Init("hashash", 4, "a", "b")
     v = EncoderDecoder.encodeMessage(msg)
     p = EncoderDecoder.decodeMessage(v)
-    print("stop for debug")
+    print(p.origin_start)
 
 if __name__ == '__main__':
     main()

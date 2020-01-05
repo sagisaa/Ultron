@@ -5,7 +5,7 @@ class Offer(Message):
     def __init__(self):
         Message.__init__(self)
 
-    def Init(self, hash, origin_length, origin_input):
+    def Init(self):
         self.type = 2
         self.hash = ""
         self.origin_length = 0

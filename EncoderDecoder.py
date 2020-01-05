@@ -1,22 +1,26 @@
 import struct
 from Messages.Imports import *
 
-packing_format = 'B40sB256s256s'
+packing_format = '32sB40sB256s256s'
+
 
 def encodeMessage(msg):
+    teamUtf8 = msg.team_name.encode('utf-8')
     hashUtf8 = msg.hash.encode('utf-8')
     originStartUtf8 = msg.origin_start.encode('utf-8')
     originEndUtf8 = msg.origin_end.encode('utf-8')
-    encodedM = struct.pack(packing_format, msg.type, hashUtf8, msg.origin_length, originStartUtf8, originEndUtf8)
+    encodedM = struct.pack(packing_format, teamUtf8, msg.type, hashUtf8, msg.origin_length, originStartUtf8, originEndUtf8)
     return encodedM
+
 
 def decodeMessage(buffer):
     encodedM = struct.unpack(packing_format, buffer)
-    type = encodedM[0]
-    hash = encodedM[1].decode('utf-8')
-    origin_length = encodedM[2]
-    origin_start = encodedM[3].decode('utf-8')
-    origin_end = encodedM[4].decode('utf-8')
+    team = encodedM[0].decode('utf-8')
+    type = encodedM[1]
+    hash = encodedM[2].decode('utf-8')
+    origin_length = encodedM[3]
+    origin_start = encodedM[4].decode('utf-8')
+    origin_end = encodedM[5].decode('utf-8')
 
     msg = None
 
@@ -44,3 +48,10 @@ def decodeMessage(buffer):
         raise Exception("Invalid type")
 
     return msg
+
+
+def valid_ack(hash_result):
+    return True
+
+def calc_hash(hash_result, curr_thread_per_client):
+    return "vsbfd"

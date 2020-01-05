@@ -1,6 +1,7 @@
 class Message:
 
     def __init__(self):
+        self.team_name = "Jarvis"
         self.type = 0
         self.hash = ""
         self.origin_length = 0
