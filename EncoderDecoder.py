@@ -38,7 +38,7 @@ def decodeMessage(buffer):
 
     elif type == 4:
         msg = Ack()
-        msg.Init()
+        msg.Init(hash, origin_length, origin_start)
 
     elif type == 5:
         msg = NAck()
@@ -52,6 +52,7 @@ def decodeMessage(buffer):
 
 def valid_ack(hash_result):
     return True
+
 
 def calc_hash(hash_result, curr_thread_per_client):
     return "vsbfd"

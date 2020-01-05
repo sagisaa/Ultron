@@ -5,6 +5,8 @@ from Messages.Offer import *
 
 SERVER_IP = "127.0.0.1"
 SERVER_LISTENING_PORT = 3117
+BUFFER_SIZE = 586
+
 
 class Server:
 
@@ -23,17 +25,16 @@ class Server:
     def send_offer(self, client_address):
         msg = Offer()
         msg.Init()
-
+        print "offer"
         self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
 
     def start(self):
 
-        self.server_socket.bind(SERVER_IP, self.server_port)
+        self.server_socket.bind((SERVER_IP, self.server_port))
 
         while True:
-
             # before doing the functionality below, move on the list and remove any thread that has finished
-            data, address = self.server_socket.recvfrom(SERVER_LISTENING_PORT)
+            data, address = self.server_socket.recvfrom(BUFFER_SIZE)
             msg = EncoderDecoder.decodeMessage(data)
 
             if msg.type == 1:           # Discover

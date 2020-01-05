@@ -4,8 +4,8 @@ from Messages.Imports import *
 import EncoderDecoder
 from Future import *
 
-server_port = 3117
-IP_broadcast = "255.255.255.255"
+server_port = 80
+IP_broadcast = "80.230.140.109" #"255.255.255.255"
 BUFFER_SIZE = 586
 
 
@@ -43,11 +43,11 @@ class Client:
     def discover(self):
         discover_message = Discover()
         self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), (IP_broadcast, server_port))
-        time_out = threading.Timer(1.0, self.stop_listening)
+        time_out = threading.Timer(10.0, self.stop_listening)
         time_out.start()
 
         while self.listen:
-            data, address = self.client_socket.recv(BUFFER_SIZE)
+            data, address = self.client_socket.recvfrom(BUFFER_SIZE)
             msg = EncoderDecoder.decodeMessage(data)
             if msg.type == 2:
                 self.add_server(address)
