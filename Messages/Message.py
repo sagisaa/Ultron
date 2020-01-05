@@ -1,5 +1,3 @@
-import struct
-
 class Message:
 
     def __init__(self):
@@ -14,10 +12,3 @@ class Message:
 
     def operate(self):
         raise Exception("This is an abstract message")
-
-    def encodeMyself(self):
-        hashUtf8 = self.hash.encode('utf-8')
-        originStartUtf8 = self.origin_start.encode('utf-8')
-        originEndUtf8 = self.origin_end.encode('utf-8')
-        encodedM = struct.pack('B40sB256s256s', self.type, hashUtf8, self.origin_length, originStartUtf8, originEndUtf8)
-        return encodedM

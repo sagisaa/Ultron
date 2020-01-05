@@ -1,4 +1,4 @@
-from Message import *
+from Messages.Message import Message
 
 class Request(Message):
 

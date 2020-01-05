@@ -1,4 +1,5 @@
-from Message import *
+from Messages.Message import *
+from Messages.Message import Message
 
 class NAck(Message):
 
