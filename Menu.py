@@ -4,6 +4,9 @@ import EncoderDecoder
 
 def main():
 
+    print divide_range(8)
+
+
     numOfServers = 1
     if len(sys.argv) != 2:
         print("Number of servers set to default: 1")
