@@ -46,7 +46,7 @@ class Client:
         discover_message.Init()
         self.client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), broadcast_addr)
-        time_out = threading.Timer(10.0, self.stop_listening)
+        time_out = threading.Timer(1.0, self.stop_listening)
         time_out.start()
 
         while self.listen:
@@ -131,7 +131,7 @@ class Client:
 
     def communicate(self, hash, msg_length):
         self.discover()
-
+        self.send_to_servers(hash, msg_length)
         while not self.should_stop():
             # First - timeout treatment
             # Second - receiving

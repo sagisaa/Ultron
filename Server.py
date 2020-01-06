@@ -47,3 +47,4 @@ class Server:
                 client_thread = threading.Thread(target=EncoderDecoder.calc_hash, args=(hash_output, curr_thread_per_client,))
                 curr_thread_per_client[1] = client_thread
                 client_thread.start()
+                print "received a request!"
