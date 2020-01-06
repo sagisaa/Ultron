@@ -1,6 +1,7 @@
 import threading
 import socket
 import EncoderDecoder
+from Messages.NAck import NAck
 from Messages.Offer import *
 
 server_addr = ('', 3117)
@@ -48,3 +49,8 @@ class Server:
                 curr_thread_per_client[1] = client_thread
                 client_thread.start()
                 print "received a request!"
+                # test
+                msg = NAck()
+                msg.Init(msg.hash, 6)
+                print "Answering!"
+                self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), address)

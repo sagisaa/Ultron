@@ -26,7 +26,7 @@ class Future:
         self.string_range = string_range
         self.server = server
         self.timer = threading.Timer(TRESHOLD_SERVER_DELAY, self.set_timeout)
-        self.answer = None
+        self.answer = Message()
 
     def update_answer(self, result):
         self.timeout = False
