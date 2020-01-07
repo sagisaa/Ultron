@@ -60,6 +60,7 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
             break
 
     if answer is None:
+        print(SELF_TEAM_NAME + " is too busy right now, and team " + request_msg.team_name + " is not helping!")
         client_ans = Message(SELF_TEAM_NAME, NACK_CODE, hash_result, hash_length, hash_start, hash_end)
     else:
         client_ans = Message(SELF_TEAM_NAME, ACK_CODE, hash_result, hash_length, answer, hash_end)
