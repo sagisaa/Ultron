@@ -19,6 +19,7 @@ class Future:
         return self.timeout
 
     def start_timer(self):
+        self.timer = threading.Timer(TRESHOLD_SERVER_DELAY, self.set_timeout)
         self.timeout = False
         self.timer.start()
 
