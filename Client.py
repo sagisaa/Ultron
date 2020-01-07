@@ -62,6 +62,7 @@ class Client:
         while self.listen:
             is_received = False
             try:
+                data = []
                 data, address = self.client_socket.recvfrom(BUFFER_SIZE)
                 is_received = True
                 msg = EncoderDecoder.decodeMessage(data)
@@ -69,8 +70,9 @@ class Client:
                     if msg.type == 2:
                         # if self.available_servers.count(address) == 0:
                         self.add_server(address, msg.team_name)
-
                         print("Received an offer from team " + msg.team_name + ", address: " + str(address))
+                    else:
+                        print("Very funny, team " + msg.team_name + ".. An offer was expected.")
                 else:
                     print("Received garbage from address " + str(address))
             except:
@@ -137,7 +139,7 @@ class Client:
             if future_ip == curr_ip and future_port == curr_port:
                 future_obj.update_answer(result)
 
-    def receive_msg(self):
+    def receive_msg(self, hash):
         print("Trying to receive")
         if self.should_stop():
             return False
@@ -149,7 +151,7 @@ class Client:
                 print("Received!!! type - " + str(msg.type))
                 if msg.type == 4:  # ACK
                     curr_hash_result = msg.origin_start
-                    if Hash.valid_ack(curr_hash_result):  # HURRAY
+                    if Hash.valid_ack(hash, curr_hash_result):  # HURRAY
                         print("Team " + msg.team_name + " has found the result!")
                         self.hash_result = curr_hash_result
                         self.found_result = True
@@ -168,7 +170,7 @@ class Client:
         while len(self.available_servers) == 0:
             self.discover()
         self.send_to_servers(hash, msg_length)
-        while self.receive_msg():
+        while self.receive_msg(hash):
             if not self.found_result:
                 self.timeout_treatment(hash, msg_length)
             else:

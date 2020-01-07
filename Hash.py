@@ -38,7 +38,12 @@ def divide_range(msg_length, available_servers):
     return pairs
 
 def valid_ack(hash_result, maybe_word_input):
-    return hashlib.sha1(maybe_word_input.encode()).hexdigest() == hash_result
+    if not hashlib.sha1(maybe_word_input.encode()).hexdigest() == hash_result:
+        print(SELF_TEAM_NAME + " has detected a false alarm, sir.")
+        print(maybe_word_input + " is not the answer.")
+        print("Always at your service, sir.")
+        return False
+    return True
 
 def calc_hash(request_msg, server_socket, client_address, lock_obj):
     hash_result = request_msg.hash
