@@ -1,10 +1,8 @@
 import hashlib
 import threading
 import socket
-
+from Message import *
 import EncoderDecoder
-from Messages.Ack import Ack
-from Messages.NAck import NAck
 from Ranger import Ranger
 
 def num_to_word(num, len):
@@ -50,11 +48,9 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
             break
 
     if answer is None:
-        client_ans = NAck()
-        client_ans.Init(hash_result, request_msg.origin_length)
+        client_ans = Message(SELF_TEAM_NAME, NACK_CODE, hash_result, hash_length, hash_start, hash_end)
     else:
-        client_ans = Ack()
-        client_ans.Init(hash_result, hash_length, answer)
+        client_ans = Message(SELF_TEAM_NAME, ACK_CODE, hash_result, hash_length, answer, hash_end)
 
     lock_obj.acquire()
     server_socket.sendto(EncoderDecoder.encodeMessage(client_ans), client_address)

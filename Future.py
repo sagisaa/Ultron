@@ -1,5 +1,5 @@
 import threading
-from Messages.Message import *
+from Message import *
 TRESHOLD_SERVER_DELAY = 15.0
 
 

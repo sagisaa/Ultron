@@ -1,14 +1,12 @@
 import socket
 import threading
-
 import Hash
-from Messages.Imports import *
+from Message import *
 import EncoderDecoder
 from Future import *
 
 broadcast_addr = ('255.255.255.255', 3117)
 BUFFER_SIZE = 586
-
 
 class Client:
     def __init__(self):
@@ -55,8 +53,7 @@ class Client:
     def discover(self):
         self.start_discovering()
         print("Discovering servers")
-        discover_message = Discover()
-        discover_message.Init()
+        discover_message = Message(SELF_TEAM_NAME, DISCOVER_CODE, "", 0, "", "")
         self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), broadcast_addr)
         time_out = threading.Timer(5.0, self.stop_discovering)
         time_out.start()
@@ -93,8 +90,7 @@ class Client:
 
     def send_request(self, hash, msg_length, start_s, end_s, server_add):
         # creating new request message
-        request_msg = Request()
-        request_msg.Init(hash, msg_length, start_s, end_s)
+        request_msg = Message(SELF_TEAM_NAME, REQUEST_CODE, hash, msg_length, start_s, end_s)
         self.client_socket.sendto(EncoderDecoder.encodeMessage(request_msg), server_add)
 
     def timeout_treatment(self, hash, msg_length):
