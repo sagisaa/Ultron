@@ -4,7 +4,7 @@ import socket
 from Message import *
 import EncoderDecoder
 from Ranger import Ranger
-from Server import *
+import Server
 
 def num_to_word(num, len):
     letters = "abcdefghijklmnopqrstuvwxyz"

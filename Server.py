@@ -7,17 +7,16 @@ from Message import *
 server_addr = ('', 3117)
 BUFFER_SIZE = 586
 lock_obj = threading.Lock()
+annoying_clients = []
 
 class Server:
-
-    annoying_clients = []
 
     def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET,
                                            socket.SOCK_DGRAM)
 
     def send_offer(self, client_address, team_name):
-        if Server.annoying_clients.count((team_name, client_address)) == 0:
+        if annoying_clients.count((team_name, client_address)) == 0:
             msg = Message(SELF_TEAM_NAME, OFFER_CODE, "", 0, "", "")
             print(SELF_TEAM_NAME + " is offering service to team " + team_name + ", address: " + str(client_address))
             self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
@@ -40,7 +39,7 @@ class Server:
 
             elif msg.type == 3:         # Request
                 print("Received a request from team " + msg.team_name + ", address: " + str(address) + " with range (" + msg.origin_start + ", " + msg.origin_end + ")")
-                Server.annoying_clients.append((msg.team_name, address))
+                annoying_clients.append((msg.team_name, address))
                 client_thread = threading.Thread(target=Hash.calc_hash,
                                                  args=(msg, self.server_socket,
                                                        address, lock_obj))
