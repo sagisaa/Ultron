@@ -19,10 +19,10 @@ class Server:
     def send_offer(self, client_address, team_name):
         if Server.annoying_clients.count((team_name, client_address)) == 0:
             msg = Message(SELF_TEAM_NAME, OFFER_CODE, "", 0, "", "")
-            print("Jarvis is offering service to team " + team_name + ", address: " + str(client_address))
+            print(SELF_TEAM_NAME + " is offering service to team " + team_name + ", address: " + str(client_address))
             self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
         else:
-            print("Jarvis is already calculating for team " + team_name + ", address: " + str(client_address))
+            print(SELF_TEAM_NAME + " is already calculating for team " + team_name + ", address: " + str(client_address))
 
     def start(self):
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

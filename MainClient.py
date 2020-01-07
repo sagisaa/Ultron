@@ -1,4 +1,5 @@
 from Client import *
+from Message import *
 import sys
 
 def main():
@@ -12,7 +13,7 @@ def main():
     hashing_length = 5
     client = Client()
     result = client.communicate(hashing, hashing_length)
-    print("Jarvis has done calculating.")
+    print(SELF_TEAM_NAME + " has done calculating.")
     print("The input for " + hashing + " is: " + result)
     sys.exit(0)
 

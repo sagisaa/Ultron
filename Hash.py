@@ -44,7 +44,7 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
     for word in words_to_pass.generate_all_from_to_of_len():
         result = hashlib.sha1(word.encode()).hexdigest()
         if result == hash_result:
-            print("Jarvis has found an answer for team " + request_msg.team_name + ": " + str(word))
+            print(SELF_TEAM_NAME + " has found an answer for team " + request_msg.team_name + ": " + str(word))
             answer = word
             break
 
