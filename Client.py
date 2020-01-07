@@ -65,11 +65,14 @@ class Client:
                 data, address = self.client_socket.recvfrom(BUFFER_SIZE)
                 is_received = True
                 msg = EncoderDecoder.decodeMessage(data)
-                if msg.type == 2:
-                    # if self.available_servers.count(address) == 0:
-                    self.add_server(address, msg.team_name)
+                if msg is not None:
+                    if msg.type == 2:
+                        # if self.available_servers.count(address) == 0:
+                        self.add_server(address, msg.team_name)
 
-                    print("Received an offer from team " + msg.team_name + ", address: " + str(address))
+                        print("Received an offer from team " + msg.team_name + ", address: " + str(address))
+                else:
+                    print("Received garbage from address " + str(address))
             except:
                 if is_received:
                     print("What the hell is this?")
@@ -142,17 +145,22 @@ class Client:
         try:
             data, address = self.client_socket.recvfrom(BUFFER_SIZE)
             msg = EncoderDecoder.decodeMessage(data)
-            print("Received!!! type - " + str(msg.type))
-            if msg.type == 4:  # ACK
-                curr_hash_result = msg.origin_start
-                if Hash.valid_ack(curr_hash_result):  # HURRAY
-                    print("Team " + msg.team_name + " has found the result!")
-                    self.hash_result = curr_hash_result
-                    self.found_result = True
-                    return False
-            elif msg.type == 5:  # NAck
-                self.set_future_nack(address[0], address[1], msg)
-            return True
+            if msg is not None:
+                print("Received!!! type - " + str(msg.type))
+                if msg.type == 4:  # ACK
+                    curr_hash_result = msg.origin_start
+                    if Hash.valid_ack(curr_hash_result):  # HURRAY
+                        print("Team " + msg.team_name + " has found the result!")
+                        self.hash_result = curr_hash_result
+                        self.found_result = True
+                        return False
+                    else:
+                        print("Team " + msg.team_name + " is on team Cap.")
+                elif msg.type == 5:  # NAck
+                    self.set_future_nack(address[0], address[1], msg)
+                return True
+            else:
+                return True
         except:
             return True
 

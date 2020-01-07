@@ -9,7 +9,7 @@ def main():
         # hashing = raw_input("What hashing message do you want to decrypt?\n")
         # hashing_length = int(raw_input("Sir, what is the length of the original message? "))
         # print "Thank you sir, my resources are now calculating the data for you."
-    hashing = "9017347a610d1436c1aaf52764e6578e8fc1a083" #cyber
+    hashing = "e261fbd24a6484c58a56a1cf2750b8e0ddf8fada"    #terminate
     hashing_length = 5
     client = Client()
     result = client.communicate(hashing, hashing_length)

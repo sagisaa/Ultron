@@ -37,8 +37,8 @@ def divide_range(msg_length, available_servers):
         pairs.append((num_to_word(int(i * rng), msg_length), num_to_word(int((i + 1) * rng) - 1, msg_length)))
     return pairs
 
-def valid_ack(hash_result):
-    return True
+def valid_ack(hash_result, maybe_word_input):
+    return hashlib.sha1(maybe_word_input.encode()).hexdigest() == hash_result
 
 def calc_hash(request_msg, server_socket, client_address, lock_obj):
     hash_result = request_msg.hash
