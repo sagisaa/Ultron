@@ -1,0 +1,65 @@
+import hashlib
+import threading
+import socket
+
+import EncoderDecoder
+from Messages.Ack import Ack
+from Messages.NAck import NAck
+from Ranger import Ranger
+
+def num_to_word(num, len):
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    remainder = num % 26
+    rest = num / 26
+    last_letter = letters[remainder]
+    if len > 1:
+        return num_to_word(rest, len - 1) + last_letter
+    else:
+        return last_letter
+
+
+def divide_range(msg_length, available_servers):
+    # return array of pairs
+    pairs = []
+    num_of_servers = len(available_servers)
+    end = 26 ** msg_length
+    rng = (end / num_of_servers)
+    for i in range(0, num_of_servers):
+        pairs.append((num_to_word(int(i * rng), msg_length), num_to_word(int((i + 1) * rng) - 1, msg_length)))
+    return pairs
+
+def valid_ack(hash_result):
+    return True
+
+def calc_hash(request_msg, server_socket, client_address):
+    hash_result = request_msg.hash
+    hash_start = request_msg.origin_start
+    hash_end = request_msg.origin_end
+    hash_length = request_msg.origin_length
+    answer = None
+    client_ans = None
+
+    # Need to change to our function!
+    words_to_pass = Ranger(hash_start, hash_end)
+
+    for word in words_to_pass.generate_all_from_to_of_len():
+        result = hashlib.sha1(word.encode()).hexdigest()
+        if result == hash_result:
+            print("Found answer - " + str(word))
+            answer = word
+            break
+
+    print(answer)
+    if answer is None:
+        client_ans = NAck()
+        client_ans.Init(hash_result, request_msg.origin_length)
+    else:
+        client_ans = Ack()
+        client_ans.Init(hash_result, hash_length, answer)
+
+    # lock_obj.acquire()
+    print("adding result!")
+    print(client_address)
+    print(client_ans)
+    server_socket.sendto(EncoderDecoder.encodeMessage(client_ans), client_address)
+    # lock_obj.release()

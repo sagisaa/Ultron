@@ -10,6 +10,3 @@ class Message:
 
     def Init(self):
         raise Exception("This is an abstract message")
-
-    def operate(self):
-        raise Exception("This is an abstract message")

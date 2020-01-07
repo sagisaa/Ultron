@@ -11,6 +11,3 @@ class Ack(Message):
         self.origin_length = origin_length
         self.origin_start = origin_input
         self.origin_end = ""
-
-    def operate(self):
-        print("mkl")

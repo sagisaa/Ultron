@@ -11,6 +11,3 @@ class Request(Message):
         self.origin_length = origin_length
         self.origin_start = origin_start
         self.origin_end = origin_end
-
-    def operate(self):
-        print("mkl")

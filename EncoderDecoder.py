@@ -3,7 +3,6 @@ from Messages.Imports import *
 
 packing_format = '32sB40sB256s256s'
 
-
 def encodeMessage(msg):
     teamUtf8 = msg.team_name.encode('utf-8')
     hashUtf8 = msg.hash.encode('utf-8')
@@ -15,12 +14,12 @@ def encodeMessage(msg):
 
 def decodeMessage(buffer):
     encodedM = struct.unpack(packing_format, buffer)
-    team = encodedM[0].decode('utf-8')
+    team = encodedM[0].rstrip('\x00')
     type = encodedM[1]
-    hash = encodedM[2].decode('utf-8')
+    hash = encodedM[2].rstrip('\x00')
     origin_length = encodedM[3]
-    origin_start = encodedM[4].decode('utf-8')
-    origin_end = encodedM[5].decode('utf-8')
+    origin_start = encodedM[4].rstrip('\x00')
+    origin_end = encodedM[5].rstrip('\x00')
 
     msg = None
 
@@ -45,15 +44,8 @@ def decodeMessage(buffer):
         msg.Init(hash, origin_length)
 
     else:
-        print buffer
+        print(buffer)
         raise Exception("Invalid type: " + str(encodedM[0]) + str(encodedM[1]))
 
     return msg
 
-
-def valid_ack(hash_result):
-    return True
-
-
-def calc_hash(hash_result, curr_thread_per_client):
-    return "vsbfd"

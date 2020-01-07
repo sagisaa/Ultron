@@ -11,6 +11,3 @@ class Discover(Message):
         self.origin_length = 0
         self.origin_start = ""
         self.origin_end = ""
-
-    def operate(self):
-        print("mkl")

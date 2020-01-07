@@ -12,6 +12,3 @@ class NAck(Message):
         self.origin_length = origin_length
         self.origin_start = ""
         self.origin_end = ""
-
-    def operate(self):
-        print("mkl")
