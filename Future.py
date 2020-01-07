@@ -9,7 +9,7 @@ class Future:
         self.string_range = []                 # (start_string, end_string)
         self.server = []                # (server_ip, server_port)
         self.timer = None               # thread timer
-        self.answer = Message()              # message - Ack/NAck
+        self.answer = Message(SELF_TEAM_NAME, 0, "", 0, "", "")
         self.timeout = False
 
     def set_timeout(self):
@@ -26,7 +26,7 @@ class Future:
         self.string_range = string_range
         self.server = server
         self.timer = threading.Timer(TRESHOLD_SERVER_DELAY, self.set_timeout)
-        self.answer = Message()
+        self.answer = Message(SELF_TEAM_NAME, 0, "", 0, "", "")
 
     def update_answer(self, result):
         self.timeout = False

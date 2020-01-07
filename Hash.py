@@ -4,6 +4,7 @@ import socket
 from Message import *
 import EncoderDecoder
 from Ranger import Ranger
+from Server import *
 
 def num_to_word(num, len):
     letters = "abcdefghijklmnopqrstuvwxyz"
@@ -53,5 +54,6 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
         client_ans = Message(SELF_TEAM_NAME, ACK_CODE, hash_result, hash_length, answer, hash_end)
 
     lock_obj.acquire()
+    Server.annoying_clients.remove((request_msg.team_name, client_address))
     server_socket.sendto(EncoderDecoder.encodeMessage(client_ans), client_address)
     lock_obj.release()
