@@ -2,7 +2,7 @@ import threading
 import socket
 import EncoderDecoder
 import Hash
-from Messages.Offer import *
+from Message import *
 
 server_addr = ('', 3117)
 BUFFER_SIZE = 586
@@ -11,21 +11,11 @@ lock_obj = threading.Lock()
 class Server:
 
     def __init__(self):
-        # The following field is list of 3 elements.
-        # The first element is each pair is a client address,
-        # for example: 127.0.0.1, 80
-        # The second element is thread which running the analysis
-        # process with the client input.
-        # The third element is the result
-        # self.thread_per_client = []
         self.server_socket = socket.socket(socket.AF_INET,
                                            socket.SOCK_DGRAM)
-        # (Client, result To send)
-        # self.results_to_send = []
 
     def send_offer(self, client_address, team_name):
-        msg = Offer()
-        msg.Init()
+        msg = Message(SELF_TEAM_NAME, OFFER_CODE, "", 0, "", "")
         print("Jarvis is offering service to team " + team_name + ", address: " + str(client_address))
         self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
 

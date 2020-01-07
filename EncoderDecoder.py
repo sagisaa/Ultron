@@ -1,6 +1,5 @@
 import struct
-from Messages.Imports import *
-
+from Message import *
 packing_format = '32sB40sB256s256s'
 
 def encodeMessage(msg):
@@ -21,31 +20,8 @@ def decodeMessage(buffer):
     origin_start = encodedM[4].rstrip('\x00')
     origin_end = encodedM[5].rstrip('\x00')
 
-    msg = None
-
-    if type == 1:
-        msg = Discover()
-        msg.Init()
-
-    elif type == 2:
-        msg = Offer()
-        msg.Init()
-
-    elif type == 3:
-        msg = Request()
-        msg.Init(hash, origin_length, origin_start, origin_end)
-
-    elif type == 4:
-        msg = Ack()
-        msg.Init(hash, origin_length, origin_start)
-
-    elif type == 5:
-        msg = NAck()
-        msg.Init(hash, origin_length)
-
-    else:
-        print(buffer)
-        raise Exception("Invalid type: " + str(encodedM[0]) + str(encodedM[1]))
+    # Check valid!!
+    msg = Message(team, type, hash, origin_length, origin_start, origin_end)
 
     return msg
 
