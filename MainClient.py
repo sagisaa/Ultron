@@ -8,8 +8,8 @@ def main():
         # hashing = raw_input("What hashing message do you want to decrypt?\n")
         # hashing_length = int(raw_input("Sir, what is the length of the original message? "))
         # print "Thank you sir, my resources are now calculating the data for you."
-    hashing = "52df896f0495f04728cefd3e9432e8a22c3a0baf" #aaar
-    hashing_length = 4
+    hashing = "701737c8eb40358a481eca2ee51cedae88ed151c" #erafg
+    hashing_length = 5
     client = Client()
     result = client.communicate(hashing, hashing_length)
     print("Jarvis has done calculating.")
