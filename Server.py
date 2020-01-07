@@ -48,6 +48,6 @@ class Server:
                 # curr_thread_per_client = [address, None, ""]
                 client_thread = threading.Thread(target=Hash.calc_hash,
                                                  args=(msg, self.server_socket,
-                                                       address,))
+                                                       address, lock_obj))
                 # curr_thread_per_client[1] = client_thread
                 client_thread.start()

@@ -31,7 +31,7 @@ def divide_range(msg_length, available_servers):
 def valid_ack(hash_result):
     return True
 
-def calc_hash(request_msg, server_socket, client_address):
+def calc_hash(request_msg, server_socket, client_address, lock_obj):
     hash_result = request_msg.hash
     hash_start = request_msg.origin_start
     hash_end = request_msg.origin_end
@@ -57,9 +57,9 @@ def calc_hash(request_msg, server_socket, client_address):
         client_ans = Ack()
         client_ans.Init(hash_result, hash_length, answer)
 
-    # lock_obj.acquire()
+    lock_obj.acquire()
     print("adding result!")
     print(client_address)
     print(client_ans)
     server_socket.sendto(EncoderDecoder.encodeMessage(client_ans), client_address)
-    # lock_obj.release()
+    lock_obj.release()

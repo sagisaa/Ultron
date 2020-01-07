@@ -14,7 +14,7 @@ class Client:
     def __init__(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.client_socket.settimeout(5.0)
+        self.client_socket.settimeout(1.0)
         self.available_servers = []
         self.futures = []               # this list contains a list of future objects.
         self.listen = True
@@ -29,17 +29,17 @@ class Client:
         self.listen = True
         print("Started discovering")
 
-    def add_server(self, server):
-        self.available_servers.append(server)
+    def add_server(self, server, team_name):
+        self.available_servers.append((server, team_name))
 
     def remove_used_servers(self):
         for future_obj in self.futures:
             # this check validate that this future is currently in use
             if future_obj.answer.type == 0 and not future_obj.is_timeout():
                 curr_future_server = future_obj.server
-                for server in self.available_servers:
+                for (server, team_name) in self.available_servers:
                     if server[0] == curr_future_server[0] and server[1] == curr_future_server[1]:
-                        self.available_servers.remove(server)
+                        self.available_servers.remove((server, team_name))
 
     def add_future(self, future_obj):
         self.futures.append(future_obj)
@@ -60,24 +60,28 @@ class Client:
         self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), broadcast_addr)
         time_out = threading.Timer(5.0, self.stop_discovering)
         time_out.start()
+        print("waiting for offers")
 
         while self.listen:
-            print("waiting for an offer")
+            is_received = False
             try:
                 data, address = self.client_socket.recvfrom(BUFFER_SIZE)
+                is_received = True
                 msg = EncoderDecoder.decodeMessage(data)
                 if msg.type == 2:
-                    if self.available_servers.count(address) == 0:
-                        self.add_server(address)
-                        print("Received an offer!")
+                    # if self.available_servers.count(address) == 0:
+                    self.add_server(address, msg.team_name)
+
+                    print("Received an offer from team " + msg.team_name + ", address: " + str(address))
             except:
-                print("done")
+                if is_received:
+                    print("What the hell is this?")
 
     def send_to_servers(self, hash, msg_length):
         hash_range = Hash.divide_range(msg_length, self.available_servers)
 
-        for i, server in enumerate(self.available_servers):
-            print("Request sent to " + str(server[0]) + " " + str(server[1]))
+        for i, (server, team_name) in enumerate(self.available_servers):
+            print("Request sent to team " + team_name + ", address: " + str(server))
             curr_hash_range = [hash_range[i][0], hash_range[i][1]]
             self.send_request(hash, msg_length, curr_hash_range[0], curr_hash_range[1], server)
             current_msg_result = Future()
@@ -102,7 +106,7 @@ class Client:
 
         self.discover()
 
-        for i, server in enumerate(self.available_servers):
+        for i, (server, team_name) in enumerate(self.available_servers):
             if i >= len(timeout_futures):
                 break
 
@@ -135,6 +139,7 @@ class Client:
             if msg.type == 4:  # ACK
                 curr_hash_result = msg.origin_start
                 if Hash.valid_ack(curr_hash_result):  # HURRAY
+                    print("Team " + msg.team_name + " has found the result!")
                     self.hash_result = curr_hash_result
                     self.found_result = True
                     return True
