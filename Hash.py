@@ -16,6 +16,13 @@ def num_to_word(num, len):
     else:
         return last_letter
 
+def word_to_num(word, len):
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    num = 0
+    for i in range(len-1, -1, -1):
+        cur_dig = letters.index(word[i])
+        num += cur_dig * (26 ** (len - i - 1))
+    return num
 
 def divide_range(msg_length, available_servers):
     # return array of pairs
@@ -37,11 +44,10 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
     hash_length = request_msg.origin_length
     answer = None
     client_ans = None
-
-    # Need to change to our function!
-    words_to_pass = Ranger(hash_start, hash_end)
-
-    for word in words_to_pass.generate_all_from_to_of_len():
+    num_start = word_to_num(hash_start, hash_length)
+    num_end = word_to_num(hash_end, hash_length)
+    for i in range(num_start, num_end + 1):
+        word = num_to_word(i, hash_length)
         result = hashlib.sha1(word.encode()).hexdigest()
         if result == hash_result:
             print(SELF_TEAM_NAME + " has found an answer for team " + request_msg.team_name + ": " + str(word))

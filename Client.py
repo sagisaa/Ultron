@@ -30,14 +30,14 @@ class Client:
     def add_server(self, server, team_name):
         self.available_servers.append((server, team_name))
 
-    def remove_used_servers(self):
-        for future_obj in self.futures:
-            # this check validate that this future is currently in use
-            if future_obj.answer.type == 0 and not future_obj.is_timeout():
-                curr_future_server = future_obj.server
-                for (server, team_name) in self.available_servers:
-                    if server[0] == curr_future_server[0] and server[1] == curr_future_server[1]:
-                        self.available_servers.remove((server, team_name))
+    # def remove_used_servers(self):
+    #     for future_obj in self.futures:
+    #         # this check validate that this future is currently in use
+    #         if future_obj.answer.type == 0 and not future_obj.is_timeout():
+    #             curr_future_server = future_obj.server
+    #             for (server, team_name) in self.available_servers:
+    #                 if server[0] == curr_future_server[0] and server[1] == curr_future_server[1]:
+    #                     self.available_servers.remove((server, team_name))
 
     def add_future(self, future_obj):
         self.futures.append(future_obj)
@@ -86,12 +86,24 @@ class Client:
             self.add_future(current_msg_result)
             current_msg_result.start_timer()
 
-        self.remove_used_servers()
+        self.filter_servers()
 
     def send_request(self, hash, msg_length, start_s, end_s, server_add):
         # creating new request message
         request_msg = Message(SELF_TEAM_NAME, REQUEST_CODE, hash, msg_length, start_s, end_s)
         self.client_socket.sendto(EncoderDecoder.encodeMessage(request_msg), server_add)
+
+    def filter_servers(self):
+        filtered_servers = []
+        for (server, team_name) in self.available_servers:
+            used_server = False
+            for future_obj in self.futures:
+                if future_obj.server == server and not future_obj.is_timeout():
+                    used_server = True
+                    break
+            if not used_server:
+                filtered_servers.append((server, team_name))
+        self.available_servers = filtered_servers
 
     def timeout_treatment(self, hash, msg_length):
         timeout_futures = []
@@ -100,7 +112,7 @@ class Client:
                 timeout_futures.append(future_obj)
 
         self.discover()
-
+        self.filter_servers()
         for i, (server, team_name) in enumerate(self.available_servers):
             if i >= len(timeout_futures):
                 break
@@ -114,7 +126,7 @@ class Client:
             curr_future.start_timer()
             # remove server
 
-        self.remove_used_servers()
+        self.filter_servers()
 
     def set_future_nack(self, curr_ip, curr_port, result):
         for future_obj in self.futures:
