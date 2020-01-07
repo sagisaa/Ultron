@@ -12,7 +12,7 @@ class Client:
     def __init__(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.client_socket.settimeout(1.0)
+        self.client_socket.settimeout(15.0)
         self.available_servers = []
         self.futures = []               # this list contains a list of future objects.
         self.listen = True
@@ -165,4 +165,6 @@ class Client:
                 self.timeout_treatment(hash, msg_length)
             else:
                 break
+        for future_obj in self.futures:
+            future_obj.timer.cancel()
         return self.hash_result

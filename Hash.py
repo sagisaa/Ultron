@@ -5,6 +5,9 @@ from Message import *
 import EncoderDecoder
 from Ranger import Ranger
 import Server
+import time
+
+TIME_OUT = 15
 
 def num_to_word(num, len):
     letters = "abcdefghijklmnopqrstuvwxyz"
@@ -46,7 +49,9 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
     client_ans = None
     num_start = word_to_num(hash_start, hash_length)
     num_end = word_to_num(hash_end, hash_length)
-    for i in range(num_start, num_end + 1):
+    i = num_start
+    init_millis = int(round(time.time() * 1000))
+    while i < num_end + 1 and int(round(time.time() * 1000)) - init_millis < TIME_OUT:
         word = num_to_word(i, hash_length)
         result = hashlib.sha1(word.encode()).hexdigest()
         if result == hash_result:
