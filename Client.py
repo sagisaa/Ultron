@@ -103,7 +103,6 @@ class Client:
             if future_obj.is_timeout():
                 timeout_futures.append(future_obj)
 
-
         self.discover()
 
         for i, (server, team_name) in enumerate(self.available_servers):
@@ -142,7 +141,7 @@ class Client:
                     print("Team " + msg.team_name + " has found the result!")
                     self.hash_result = curr_hash_result
                     self.found_result = True
-                    return True
+                    return False
             elif msg.type == 5:  # NAck
                 self.set_future_nack(address[0], address[1], msg)
             return True

@@ -23,10 +23,10 @@ class Server:
         # (Client, result To send)
         # self.results_to_send = []
 
-    def send_offer(self, client_address):
+    def send_offer(self, client_address, team_name):
         msg = Offer()
         msg.Init()
-        print("Offering!")
+        print("Jarvis is offering service to team " + team_name + ", address: " + str(client_address))
         self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
 
     def start(self):
@@ -41,10 +41,10 @@ class Server:
             msg = EncoderDecoder.decodeMessage(data)
 
             if msg.type == 1:           # Discover
-                self.send_offer(address)
+                self.send_offer(address, msg.team_name)
 
             elif msg.type == 3:         # Request
-                print("Received a request from: " + str(address))
+                print("Received a request from team " + msg.team_name + ", address: " + str(address) + " with range (" + msg.origin_start + ", " + msg.origin_end + ")")
                 # curr_thread_per_client = [address, None, ""]
                 client_thread = threading.Thread(target=Hash.calc_hash,
                                                  args=(msg, self.server_socket,

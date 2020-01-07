@@ -45,11 +45,10 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
     for word in words_to_pass.generate_all_from_to_of_len():
         result = hashlib.sha1(word.encode()).hexdigest()
         if result == hash_result:
-            print("Found answer - " + str(word))
+            print("Jarvis has found an answer for team " + request_msg.team_name + ": " + str(word))
             answer = word
             break
 
-    print(answer)
     if answer is None:
         client_ans = NAck()
         client_ans.Init(hash_result, request_msg.origin_length)
@@ -58,8 +57,5 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
         client_ans.Init(hash_result, hash_length, answer)
 
     lock_obj.acquire()
-    print("adding result!")
-    print(client_address)
-    print(client_ans)
     server_socket.sendto(EncoderDecoder.encodeMessage(client_ans), client_address)
     lock_obj.release()
