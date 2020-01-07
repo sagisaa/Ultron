@@ -35,14 +35,20 @@ class Server:
             msg = EncoderDecoder.decodeMessage(data)
 
             if msg is not None:
-
                 if msg.type == 1:           # Discover
                     self.send_offer(address, msg.team_name)
 
                 elif msg.type == 3:         # Request
-                    print("Received a request from team " + msg.team_name + ", address: " + str(address) + " with range (" + msg.origin_start + ", " + msg.origin_end + ")")
-                    annoying_clients.append((msg.team_name, address))
-                    client_thread = threading.Thread(target=Hash.calc_hash,
-                                                     args=(msg, self.server_socket,
-                                                           address, lock_obj))
-                    client_thread.start()
+                    print("Received a request from team " + msg.team_name + ", address: " + str(address) +
+                          " with range (" + msg.origin_start + ", " + msg.origin_end + ")")
+                    if annoying_clients.count((msg.team_name, address)) == 0:
+                        annoying_clients.append((msg.team_name, address))
+                        client_thread = threading.Thread(target=Hash.calc_hash,
+                                                         args=(msg, self.server_socket,
+                                                               address, lock_obj))
+                        client_thread.start()
+                    else:
+                        print(SELF_TEAM_NAME + " is already calculating for team " + team_name + ", address: " + str(
+                            client_address))
+
+

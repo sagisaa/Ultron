@@ -3,7 +3,7 @@ OFFER_CODE = 2
 REQUEST_CODE = 3
 ACK_CODE = 4
 NACK_CODE = 5
-SELF_TEAM_NAME = "Friday"
+SELF_TEAM_NAME = "Jarvis"
 
 class Message:
 
