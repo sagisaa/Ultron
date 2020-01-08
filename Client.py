@@ -133,12 +133,12 @@ class Client:
         print("Trying to receive")
         if self.should_stop():
             return False
-        print("Should Receive")
+        # print("Should Receive")
         try:
             data, address = self.client_socket.recvfrom(BUFFER_SIZE)
             msg = EncoderDecoder.decodeMessage(data)
             if msg is not None:
-                print("Received!!! type - " + str(msg.type))
+                # print("Received!!! type - " + str(msg.type))
                 if msg.type == 4:  # ACK
                     curr_hash_result = msg.origin_start
                     if Hash.valid_ack(hash, curr_hash_result):  # HURRAY
