@@ -18,7 +18,6 @@ def main():
         exit(0)
     else:
         print("The input for " + hashing + " is: " + result)
-    sys.exit(0)
 
 
 if __name__ == '__main__':
