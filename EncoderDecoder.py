@@ -19,7 +19,7 @@ def encodeMessage(msg):
     origin_end = msg.origin_end
 
     team_bytes = team.ljust(32).encode('utf-8')
-    type_byte = bytes([type])
+    type_byte = bytes([int(type)])
     hash_bytes = curr_hash.encode('utf-8')
     origin_length_byte = bytes([origin_length])
     origin_start_bytes = origin_start.encode('utf-8')
@@ -28,14 +28,19 @@ def encodeMessage(msg):
 
 
 def decodeMessage(buffer):
+    curr_hash = ""
+    origin_length = 0
+    origin_start = ""
+    origin_end = ""
     try:
         team_name = buffer[0:32].decode('utf-8').strip()
-        type = int(buffer[TYPE_LOC])
-        curr_hash = buffer[HASH_LOC:(HASH_LOC + 40)].decode('utf-8')
-        origin_length = int(buffer[ORIGIN_LENGTH_LOC])
-        remaining_str = buffer[ORIGIN_START_LOC:]
-        origin_start = remaining_str[0:origin_length].decode('utf-8')
-        origin_end = remaining_str[origin_length:].decode('utf-8')
+        type = ord(buffer[TYPE_LOC])
+        if type > 2:
+            curr_hash = buffer[HASH_LOC:(HASH_LOC + 40)].decode('utf-8')
+            origin_length = int(buffer[ORIGIN_LENGTH_LOC])
+            remaining_str = buffer[ORIGIN_START_LOC:]
+            origin_start = remaining_str[0:origin_length].decode('utf-8')
+            origin_end = remaining_str[origin_length:].decode('utf-8')
 
         # Check valid!!
         msg = Message(team_name, type, curr_hash, origin_length, origin_start, origin_end)
@@ -43,6 +48,7 @@ def decodeMessage(buffer):
         return msg
 
     except:
+        print("garbage")
         return None
 
 def get_start_end(length):
