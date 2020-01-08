@@ -8,11 +8,14 @@ general_format = '32sB40sBs'
 def encodeMessage(msg):
     teamUtf8 = msg.team_name.encode('utf-8')
     hashUtf8 = msg.hash.encode('utf-8')
-    originStartUtf8 = msg.origin_start.encode('utf-8')
-    originEndUtf8 = msg.origin_end.encode('utf-8')
-    curr_msg_pack_format = header_format + str(msg.origin_length) + 's' + str(msg.origin_length) + 's'
-    encodedM = struct.pack(curr_msg_pack_format, teamUtf8, msg.type, hashUtf8, msg.origin_length, originStartUtf8,
-                           originEndUtf8)
+    if msg.origin_length != 0:
+        originStartUtf8 = msg.origin_start.encode('utf-8')
+        originEndUtf8 = msg.origin_end.encode('utf-8')
+        curr_msg_pack_format = header_format + str(msg.origin_length) + 's' + str(msg.origin_length) + 's'
+        encodedM = struct.pack(curr_msg_pack_format, teamUtf8, msg.type, hashUtf8, msg.origin_length, originStartUtf8,
+                               originEndUtf8)
+    else:
+        encodedM = struct.pack(header_format, teamUtf8, msg.type, hashUtf8, msg.origin_length)
     return encodedM
 
 
