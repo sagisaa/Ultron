@@ -1,6 +1,6 @@
 import threading
 from Message import *
-TRESHOLD_SERVER_DELAY = 15.0
+TRESHOLD_SERVER_DELAY = 30.0
 
 
 class Future:

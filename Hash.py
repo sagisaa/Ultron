@@ -68,7 +68,7 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
         i = i + 1
 
     if answer is None:
-        print(SELF_TEAM_NAME + "couldn't find an answer in this range: " + "(" + hash_start + ", " + hash_end + ")")
+        print(SELF_TEAM_NAME + " couldn't find an answer in this range: " + "(" + hash_start + ", " + hash_end + ")")
         client_ans = Message(SELF_TEAM_NAME, NACK_CODE, hash_result, hash_length, hash_start, hash_end)
     else:
         client_ans = Message(SELF_TEAM_NAME, ACK_CODE, hash_result, hash_length, answer, hash_end)
