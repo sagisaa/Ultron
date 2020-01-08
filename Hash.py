@@ -55,9 +55,9 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
     num_start = word_to_num(hash_start, hash_length)
     num_end = word_to_num(hash_end, hash_length)
     i = num_start
-    init_millis = int(round(time.time() * 1000))
+    init_millis = int(round(time.time()))
     while i < num_end + 1:
-        if int(round(time.time() * 1000)) - init_millis >= TIME_OUT:
+        if int(round(time.time())) - init_millis >= TIME_OUT:
             print("Sorry sir, but " + SELF_TEAM_NAME + " has reached its limit. Thank you, team " + request_msg.team_name)
             exit(0)
         word = num_to_word(i, hash_length)
@@ -66,6 +66,7 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
             print(SELF_TEAM_NAME + " has found an answer for team " + request_msg.team_name + ": " + str(word))
             answer = word
             break
+        i = i + 1
 
     if answer is None:
         print(SELF_TEAM_NAME + "couldn't find an answer in this range: " + "(" + hash_start + ", " + hash_end + ")")
