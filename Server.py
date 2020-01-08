@@ -17,7 +17,7 @@ class Server:
 
     def send_offer(self, client_address, team_name):
         if annoying_clients.count((team_name, client_address)) == 0:
-            msg = Message(SELF_TEAM_NAME, OFFER_CODE, "", 0, "", "")
+            msg = Message(SELF_TEAM_NAME, OFFER_CODE, "".ljust(40), 1, "s", "s")
             print(SELF_TEAM_NAME + " is offering service to team " + team_name + ", address: " + str(client_address))
             self.server_socket.sendto(EncoderDecoder.encodeMessage(msg), client_address)
         else:
@@ -48,7 +48,7 @@ class Server:
                                                                address, lock_obj))
                         client_thread.start()
                     else:
-                        print(SELF_TEAM_NAME + " is already calculating for team " + team_name + ", address: " + str(
-                            client_address))
+                        print(SELF_TEAM_NAME + " is already calculating for team " + msg.team_name + ", address: " + str(
+                            address))
 
 

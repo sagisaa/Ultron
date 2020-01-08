@@ -41,9 +41,10 @@ class Client:
                 return False
         return True
 
-    def discover(self):
+    def discover(self, hash, msg_length):
         self.start_discovering()
-        discover_message = Message(SELF_TEAM_NAME, DISCOVER_CODE, "", 0, "", "")
+        discover_message = Message(SELF_TEAM_NAME, DISCOVER_CODE, hash, msg_length,
+                                   "".ljust(msg_length), "".ljust(msg_length))
         self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), broadcast_addr)
         time_out = threading.Timer(5.0, self.stop_discovering)
         time_out.start()
@@ -105,7 +106,7 @@ class Client:
             if future_obj.is_timeout():
                 timeout_futures.append(future_obj)
 
-        self.discover()
+        self.discover(hash, msg_length)
         self.filter_servers()
         for i, (server, team_name) in enumerate(self.available_servers):
             if i >= len(timeout_futures):
@@ -157,7 +158,7 @@ class Client:
 
     def communicate(self, hash, msg_length):
         while len(self.available_servers) == 0:
-            self.discover()
+            self.discover(hash, msg_length)
         self.send_to_servers(hash, msg_length)
         while self.receive_msg(hash):
             if not self.found_result:

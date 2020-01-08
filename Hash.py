@@ -3,7 +3,6 @@ import threading
 import socket
 from Message import *
 import EncoderDecoder
-from Ranger import Ranger
 import Server
 import time
 
@@ -13,7 +12,7 @@ def num_to_word(num, len):
     letters = "abcdefghijklmnopqrstuvwxyz"
     remainder = num % 26
     rest = num / 26
-    last_letter = letters[remainder]
+    last_letter = letters[int(remainder)]
     if len > 1:
         return num_to_word(rest, len - 1) + last_letter
     else:
