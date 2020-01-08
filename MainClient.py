@@ -13,8 +13,11 @@ def main():
     hashing_length = 5
     client = Client()
     result = client.communicate(hashing, hashing_length)
-    print(SELF_TEAM_NAME + " has done calculating.")
-    print("The input for " + hashing + " is: " + result)
+    if result == "":
+        print("I'm sorry sir, but there is no result for the requested hash.")
+        exit(0)
+    else:
+        print("The input for " + hashing + " is: " + result)
     sys.exit(0)
 
 

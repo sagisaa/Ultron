@@ -21,23 +21,14 @@ class Client:
 
     def stop_discovering(self):
         self.listen = False
-        print("Stopped discovering")
+        print(SELF_TEAM_NAME + " stopped scanning for offers..")
 
     def start_discovering(self):
         self.listen = True
-        print("Started discovering")
+        print(SELF_TEAM_NAME + " started scanning for offers..")
 
     def add_server(self, server, team_name):
         self.available_servers.append((server, team_name))
-
-    # def remove_used_servers(self):
-    #     for future_obj in self.futures:
-    #         # this check validate that this future is currently in use
-    #         if future_obj.answer.type == 0 and not future_obj.is_timeout():
-    #             curr_future_server = future_obj.server
-    #             for (server, team_name) in self.available_servers:
-    #                 if server[0] == curr_future_server[0] and server[1] == curr_future_server[1]:
-    #                     self.available_servers.remove((server, team_name))
 
     def add_future(self, future_obj):
         self.futures.append(future_obj)
@@ -52,12 +43,10 @@ class Client:
 
     def discover(self):
         self.start_discovering()
-        print("Discovering servers")
         discover_message = Message(SELF_TEAM_NAME, DISCOVER_CODE, "", 0, "", "")
         self.client_socket.sendto(EncoderDecoder.encodeMessage(discover_message), broadcast_addr)
         time_out = threading.Timer(5.0, self.stop_discovering)
         time_out.start()
-        print("waiting for offers")
 
         while self.listen:
             is_received = False

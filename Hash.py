@@ -56,7 +56,10 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
     num_end = word_to_num(hash_end, hash_length)
     i = num_start
     init_millis = int(round(time.time() * 1000))
-    while i < num_end + 1 and int(round(time.time() * 1000)) - init_millis < TIME_OUT:
+    while i < num_end + 1:
+        if int(round(time.time() * 1000)) - init_millis >= TIME_OUT:
+            print("Sorry sir, but " + SELF_TEAM_NAME + " has reached its limit. Thank you, team " + request_msg.team_name)
+            exit(0)
         word = num_to_word(i, hash_length)
         result = hashlib.sha1(word.encode()).hexdigest()
         if result == hash_result:
@@ -65,7 +68,7 @@ def calc_hash(request_msg, server_socket, client_address, lock_obj):
             break
 
     if answer is None:
-        print(SELF_TEAM_NAME + " is too busy right now, and team " + request_msg.team_name + " is not helping!")
+        print(SELF_TEAM_NAME + "couldn't find an answer in this range: " + "(" + hash_start + ", " + hash_end + ")")
         client_ans = Message(SELF_TEAM_NAME, NACK_CODE, hash_result, hash_length, hash_start, hash_end)
     else:
         client_ans = Message(SELF_TEAM_NAME, ACK_CODE, hash_result, hash_length, answer, hash_end)
